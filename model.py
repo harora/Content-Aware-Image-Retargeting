@@ -9,6 +9,11 @@ import tensorflow as tf
 
 
 def encoder(weights_path=None):
+    '''
+    Encoder model based on VGG16 Network.
+    The fully connected layers are removed from the end.
+    Input:(None,224,224,3)
+    '''
     model = Sequential()
     model.add(ZeroPadding2D((1,1),input_shape=(224,224,3)))
     model.add(Conv2D(64, (3, 3), activation="relu",trainable=False))
@@ -53,47 +58,57 @@ def encoder(weights_path=None):
     return model
 
 def decoder():
-	model=Sequential()
+    '''
+    Decoder model based on Inverse VGG16 Network.
+    The fully connected layers are removed from the top.
+    Input:(None,7,7,512)
+    Elu is used as activation function instead of Relu.
+    '''
+    model=Sequential()
 
-	model.add(UpSampling2D(size=(2, 2),input_shape=(7,7,512)))
-	model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
+    model.add(UpSampling2D(size=(2, 2),input_shape=(7,7,512)))
+    model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
 
-	model.add(UpSampling2D(size=(2, 2)))
-	model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
+    model.add(UpSampling2D(size=(2, 2)))
+    model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(512, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
 
-	model.add(UpSampling2D(size=(2, 2)))
-	model.add(Conv2DTranspose(256, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(256, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(256, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
+    model.add(UpSampling2D(size=(2, 2)))
+    model.add(Conv2DTranspose(256, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(256, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(256, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
 
-	model.add(UpSampling2D(size=(2, 2)))
-	model.add(Conv2DTranspose(128, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(128, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
+    model.add(UpSampling2D(size=(2, 2)))
+    model.add(Conv2DTranspose(128, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(128, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
 
-	model.add(UpSampling2D(size=(2, 2)))
-	model.add(Conv2DTranspose(64, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
-	model.add(Conv2DTranspose(3, (3, 3), activation="elu"))
-	model.add(Cropping2D((1,1)))
+    model.add(UpSampling2D(size=(2, 2)))
+    model.add(Conv2DTranspose(64, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
+    model.add(Conv2DTranspose(3, (3, 3), activation="elu"))
+    model.add(Cropping2D((1,1)))
 
-	return model
+    return model
 
 def VGG16_classification(width,height,weights_path=None):
+    '''
+    VGG16 Classification model
+    Input:(None,height,aspect ratio*width,3)
+    '''
     model = Sequential()
     model.add(ZeroPadding2D((1,1),input_shape=(height,width,3)))
     model.add(Conv2D(64, (3, 3), activation="relu"))
@@ -146,6 +161,12 @@ def VGG16_classification(width,height,weights_path=None):
 
 
 def conv1d_model(w,h=224):
+    '''
+    Convolutional layer with a kernel size of (height=224,width=1)
+    Zero padding is not used for this layer.
+    Input: (None,height,AspectRatio*width,3)
+    Output: (None,1,AspectRatio*width,3)
+    '''
     model=Sequential()
     model.add(Conv2D(3,(h,1),padding='valid',activation='relu',input_shape=(h,w,3)))
     return model
