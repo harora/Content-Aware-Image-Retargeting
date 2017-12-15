@@ -51,16 +51,16 @@ def load_VOC_data():
                 lb[l]=1
         Y.append(lb)
 
-        if len(X)==48:
+        if len(X)==5008:
             break
     return X,Y
 
 def generate_batch(X,Y,w,h):
-    print len(X),len(Y)
     X1=[]
     Y1=[]
     for img,label in zip(X,Y):
         im=np.array(Image.open(img,'r').resize((w,h)),dtype=np.float32)
+
         im[:,:,0] -= 103.939
         im[:,:,1] -= 116.779
         im[:,:,2] -= 123.68
