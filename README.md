@@ -16,6 +16,5 @@ An implementation of Weakly- and Self-Supervised Learning for Content-Aware Deep
 
 ## TO-DO
 
-* Current parameters hard coded, add argument parser
 
 * Add stricture loss
